@@ -1,16 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Open+Sans:wght@400;600;700&display=swap");
 .App {
   text-align: center;
 }
-
+.dancing-script {
+  font-family: 'Dancing Script', cursive;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+.scale-hover {
+  transition: transform 0.2s ease-in-out;
+}
+
+.scale-hover:hover {
+  transform: scale(1.1); /* Adjust scale as needed */
+}
+.food_section .filters_menu {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style-type: none;
+  margin: 45px 0 20px 0;
+}
+
+.food_section .filters_menu li {
+  padding: 7px 25px;
+  cursor: pointer;
+  border-radius: 25px;
+}
+
+.food_section .filters_menu li.active {
+  background-color: #222831;
+  color: #ffffff;
 }
 
 .App-header {
