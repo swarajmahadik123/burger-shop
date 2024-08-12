@@ -2,17 +2,20 @@ import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Add this import
-import { handleError, handleSuccess } from '../utils/utils';
+import { handleError, handleSuccess, handleWarning } from '../utils/utils';
 import axios from 'axios';
 import Cookies from 'js-cookie';    
 import { AuthContext } from '../utils/context';
+import {Alert} from 'antd';
 const Login = () => {
-    const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+    const {isLoggedIn,setIsLoggedIn,protectedRouteHit,setProtectedRouteHit}=useContext(AuthContext);
     const navigate=useNavigate();
     const [loginInfo,setLoginInfo]=useState({
         email:'',
         password:''
     })
+    
+    
 
     const handleChange = (e)=>{
         const {name,value}=e.target;
@@ -33,12 +36,15 @@ const Login = () => {
                     'Content-Type':'application/json'
                 }
             });
-            
+            localStorage.setItem("token", response?.data?.token);
+
             Cookies.set("_id",response?.data?.token,{expires: 7});
             if (response.status === 200) {
-                handleSuccess('User  login successfully');
-                navigate('/');
                 setIsLoggedIn(true);
+                handleSuccess('User  login successfully');
+                
+                navigate('/');
+
             }
         } catch (error) {
             console.log(error);
@@ -46,6 +52,8 @@ const Login = () => {
         }
     }
     return (
+        <>
+
         <form onSubmit={handleSubmit} action="">
         <div className="min-w-screen min-h-screen  flex items-center justify-center px-5 py-5">
          <div className="bg-gray-100 text-gray-500 rounded-3xl shadow-lg w-full overflow-hidden" style={{ maxWidth: '1000px' }}>
@@ -97,6 +105,7 @@ const Login = () => {
           <ToastContainer />
         </div>
         </form>
+        </>
       );
     }
     

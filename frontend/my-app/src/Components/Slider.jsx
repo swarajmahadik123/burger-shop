@@ -27,10 +27,11 @@ const Slider = ({ foodSectionRef }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length); // Loop back to the first slide
+      setCurrentSlide(prev => (prev + 1) % slides.length); // Loop back to the first slide
     }, 5000); // 5 seconds
+
     return () => clearInterval(interval);
-  }, []);
+  }, [slides.length]); 
 
   return (
     <section className="absolute inset-0 flex items-center justify-center z-20 bg-transparent">

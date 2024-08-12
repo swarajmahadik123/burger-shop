@@ -7,9 +7,10 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [protectedRouteHit,setProtectedRouteHit] =useState(true);
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn ,protectedRouteHit,setProtectedRouteHit}}>
             {children}
         </AuthContext.Provider>
     );

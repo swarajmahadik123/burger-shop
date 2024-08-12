@@ -6,10 +6,11 @@ import FoodSection from './FoodSection';
 import Footer from './Footer';
 import { AuthContext } from '../utils/context'; // Use AuthContext instead of AuthProvider
 
+
 const Home = () => {
   const { isLoggedIn } = useContext(AuthContext); // Use AuthContext here
   const foodSectionRef = useRef(null); // Create ref for FoodSection
-
+  // console.log('is logged in in home ->',isLoggedIn);
   return (
     <div>
       <Header />
@@ -22,6 +23,7 @@ const Home = () => {
           </div>
         </>
       )}
+      
       <Footer />
     </div>
   );

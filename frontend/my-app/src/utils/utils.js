@@ -6,9 +6,14 @@ const handleSuccess = (msg)=>{
     })
 };
 
+const handleWarning =  (msg)=>{
+    toast.warning(msg,{
+        position:'top-right'
+    })
+}
 const handleError=(msg)=>{
     toast.error(msg,{
         position:'top-center'
     })
 };
-export {handleSuccess , handleError}
+export {handleSuccess , handleError , handleWarning}

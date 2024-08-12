@@ -3,6 +3,7 @@ import FoodNav from './FoodNav';
 import FoodCard from './FoodCard ';
 import axios from 'axios';
 import '../App.css';
+import { Link } from 'react-router-dom';
 
 
 const FoodSection = () => {
@@ -21,6 +22,15 @@ const FoodSection = () => {
    useEffect(()=>{
       handleProductReq();
    },[])
+//    const handleProductDetails = async (id)=>{
+//     try {
+//         const url = `http://localhost:8080/productdetail/{id}`;
+//         const response = await axios.get(url);
+//         console.log(response.data);
+//     } catch (error) {
+        
+//     }
+// }
   // Filter the food items based on the selected category
   const filteredItems = selectedCategory === 'All' 
     ? foodItems 
@@ -35,7 +45,7 @@ const FoodSection = () => {
         <FoodNav selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
           {filteredItems.map(item => (
-            <FoodCard key={item._id} name={item.name} price={item.price} img={item.img} description={item.description} />
+            <FoodCard  key={item?._id} _id={item?._id} name={item.name} price={item.price} img={item.img} description={item.description} />
           ))}
         </div>
       </div>
