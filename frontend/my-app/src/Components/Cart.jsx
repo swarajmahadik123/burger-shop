@@ -1,10 +1,62 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { Image } from 'cloudinary-react';
+import { toast, ToastContainer } from 'react-toastify';
+import { handleSuccess } from '../utils/utils';
+import { MdDelete } from "react-icons/md";
 
 const Cart = () => {
   const [productList, setProductList] = useState([]);
+  const token = localStorage.getItem('token');
+  const decodedToken = jwtDecode(token);
+  const userId = decodedToken.id;
+
+
+
+  const handleMinus = async (productId) => {
+    let updatedQuantity;
+
+    setProductList(prevList =>
+      prevList.map(item => {
+        if (item?.product?._id === productId && item.quantity > 1) {
+          updatedQuantity = item.quantity - 1;
+          return { ...item, quantity: updatedQuantity };
+        }
+        return item;
+      })
+    );
+    setTimeout(() => {
+
+      if (updatedQuantity && updatedQuantity >= 2) {
+        const url = 'http://localhost:8080/updatecart';
+
+        axios.post(url, { productId, quantity: updatedQuantity, userId: userId });
+      }
+    }, 500);
+  };
+
+  const handlePlus = async (productId) => {
+    let updatedQuantity;
+
+    setProductList(prevList =>
+      prevList.map(item => {
+        if (item?.product?._id === productId) {
+          updatedQuantity = item.quantity + 1;
+          return { ...item, quantity: updatedQuantity };
+        }
+        return item;
+      })
+    );
+
+    setTimeout(() => {
+
+      if (updatedQuantity) {
+        const url = 'http://localhost:8080/updatecart';
+        axios.post(url, { productId, quantity: updatedQuantity, userId: userId });
+      }
+    }, 500);
+  };
 
   const handleCart = async () => {
     try {
@@ -21,13 +73,52 @@ const Cart = () => {
       console.error('Cart error:', error);
     }
   };
+  const handleCheckout = () => {
+    // Clear the cart
+    const prevProductList = productList;
+    setProductList([]);
+
+    // Display success message
+    handleSuccess('order successful')
+
+    const url = 'http://localhost:8080/checkout';
+    axios.post(url, { userId, items: prevProductList });
+  };
+
+  const handleDelete = async (productId) => {
+    console.log('handle delete is called');
+    try {
+      const url = 'http://localhost:8080/removefromcart'
+      const response = await axios.post(url, {
+        userId: userId,
+        productId: productId
+      })
+
+      if (response.status === 200) {
+        // Update the productList state by removing the deleted product
+        const updatedProductList = productList.filter(
+          (item) => item.product._id !== productId
+        );
+        handleSuccess('product removed from cart');
+        setProductList(updatedProductList);
+
+      } else {
+        console.error('Failed to remove product from cart:', response.data);
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
     handleCart();
   }, []);
 
   return (
+
     <div className="bg-gray-100 min-h-screen py-8 px-4 pt-20 sm:px-6 lg:px-8">
+      <ToastContainer />
       <div className="container mx-auto">
         <h1 className="text-2xl font-semibold mb-4">Shopping Cart</h1>
         <div className="flex flex-col md:flex-row gap-4">
@@ -37,7 +128,7 @@ const Cart = () => {
             ) : (
               productList.map(item => (
                 <div key={item.product._id} className="bg-white rounded-lg shadow-md p-4 mb-4">
-                  
+
                   {/* Grid & Flex for Mobile */}
                   <div className="block md:hidden">
                     <div className="grid grid-cols-3 gap-4 items-center">
@@ -56,11 +147,16 @@ const Cart = () => {
                         <div className="flex justify-between mt-2">
                           <span>${item.product.price}</span>
                           <div className="flex items-center space-x-2">
-                            <button className="border rounded-md py-1 px-2">-</button>
+                            <button onClick={() => handleMinus(item.product._id)} className="border rounded-md py-1 px-2">-</button>
                             <span className="text-center w-8">{item.quantity}</span>
-                            <button className="border rounded-md py-1 px-2">+</button>
+                            <button onClick={() => handlePlus(item.product._id)} className="border rounded-md py-1 px-2">+</button>
                           </div>
                           <span className="font-semibold">${(item.product.price * item.quantity).toFixed(2)}</span>
+                          <MdDelete
+                            className='hover:text-yellow-500 text-red-500 cursor-pointer'
+                            onClick={() => handleDelete(item.product._id)}
+                          />
+
                         </div>
                       </div>
                     </div>
@@ -95,15 +191,22 @@ const Cart = () => {
                           <td className="py-4">${item.product.price}</td>
                           <td className="py-4">
                             <div className="flex items-center space-x-2">
-                              <button className="border rounded-md py-1 px-2">-</button>
+                              <button onClick={() => handleMinus(item.product._id)} className="border rounded-md py-1 px-2">-</button>
                               <span className="text-center w-8">{item.quantity}</span>
-                              <button className="border rounded-md py-1 px-2">+</button>
+                              <button onClick={() => handlePlus(item.product._id)} className="border rounded-md py-1 px-2">+</button>
                             </div>
                           </td>
                           <td className="py-4">${(item.product.price * item.quantity).toFixed(2)}</td>
+                          <td><MdDelete
+                            className='hover:text-yellow-500 text-red-500 cursor-pointer'
+                            onClick={() => handleDelete(item.product._id)}
+                          />
+                          </td>
                         </tr>
                       </tbody>
+
                     </table>
+
                   </div>
                 </div>
               ))
@@ -133,13 +236,14 @@ const Cart = () => {
                   ).toFixed(2)}
                 </span>
               </div>
-              <button className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</button>
+              <button onClick={handleCheckout} className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
+
 };
 
 export default Cart;
