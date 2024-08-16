@@ -8,6 +8,7 @@ import { MdDelete } from "react-icons/md";
 
 const Cart = () => {
   const [productList, setProductList] = useState([]);
+  const [totalPrice,setTotalPrice]=useState();
   const token = localStorage.getItem('token');
   const decodedToken = jwtDecode(token);
   const userId = decodedToken.id;
@@ -76,13 +77,15 @@ const Cart = () => {
   const handleCheckout = () => {
     // Clear the cart
     const prevProductList = productList;
+    console.log(total);
+    setTotalPrice(total);
     setProductList([]);
 
     // Display success message
     handleSuccess('order successful')
 
     const url = 'http://localhost:8080/checkout';
-    axios.post(url, { userId, items: prevProductList });
+    axios.post(url, { userId, items: prevProductList, total :total });
   };
 
   const handleDelete = async (productId) => {
@@ -114,7 +117,9 @@ const Cart = () => {
   useEffect(() => {
     handleCart();
   }, []);
-
+  const total = (
+    productList.reduce((total, item) => total + item.product.price * item.quantity, 0) + 1.99
+  ).toFixed(2);
   return (
 
     <div className="bg-gray-100 min-h-screen py-8 px-4 pt-20 sm:px-6 lg:px-8">
@@ -231,9 +236,7 @@ const Cart = () => {
               <div className="flex justify-between mb-2">
                 <span className="font-semibold">Total</span>
                 <span className="font-semibold">
-                  ${(
-                    productList.reduce((total, item) => total + item.product.price * item.quantity, 0) + 1.99
-                  ).toFixed(2)}
+                  ${total}
                 </span>
               </div>
               <button onClick={handleCheckout} className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</button>

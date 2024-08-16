@@ -259,14 +259,16 @@ const handleCartUpdate = async (req, res) => {
 
 const handleCheckout = async (req, res) => {
     // console.log(req.body.items);
-    const {userId,items}=req.body;
-
+    const {userId,items,total}=req.body;
+    console.log('body',req.body);
+    console.log('total',total);
     const user = await ordersModel.findOne({userId});
 
     
     const order = await ordersModel.create({
       userId : userId,
-      items:items
+      items:items,
+      total:total
     });
     await order.save();
   

@@ -40,7 +40,11 @@ const ordersSchema = new mongoose.Schema({
                 required: true
             }
         }
-    ]
+    ],
+    total:{
+        type:Number,
+        required:true
+    }
 })
 
 const ordersModel = mongoose.model('order',ordersSchema);
