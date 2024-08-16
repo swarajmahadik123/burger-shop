@@ -201,31 +201,50 @@ const handleCart = async (req, res) => {
   try {
     const userId = req.body.userId;
 
+    // Fetch the cart for the given userId
     const cart = await cartModel.findOne({ userId });
 
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }
 
+    // Check if the cart has items
+    if (cart.items.length === 0) {
+      return res.status(200).json({ message: "Cart is empty" });
+    }
+
     // Extract the items from the cart
     const products = cart.items;
 
-    // Iterate over each product in the cart
+    // Initialize an array to hold product details
     const productList = [];
     for (let i = 0; i < products.length; i++) {
-      // Find the product details using the productId
+      try {
+        // Find the product details using the productId
+        const listProduct = await productModel.findOne({
+          _id: products[i].productId,
+        });
 
-      const listProduct = await productModel.findOne({
-        _id: products[i].productId,
-      });
-      const productQuantity = products[i].quantity;
-      productList.push({ product: listProduct, quantity: productQuantity });
+        if (!listProduct) {
+          return res.status(404).json({ message: `Product with ID ${products[i].productId} not found` });
+        }
+
+        const productQuantity = products[i].quantity;
+        productList.push({ product: listProduct, quantity: productQuantity });
+      } catch (error) {
+        console.error(`Error fetching product with ID ${products[i].productId}:`, error);
+        return res.status(500).json({ message: "Error fetching product details" });
+      }
     }
+
+    // Respond with the list of products and their quantities
     res.status(200).send(productList);
   } catch (error) {
-    console.error(error);
+    console.error('Error occurred while handling cart:', error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 const handleCartUpdate = async (req, res) => {
   try {
@@ -258,22 +277,34 @@ const handleCartUpdate = async (req, res) => {
 };
 
 const handleCheckout = async (req, res) => {
-    // console.log(req.body.items);
-    const {userId,items,total}=req.body;
-    console.log('body',req.body);
-    console.log('total',total);
-    const user = await ordersModel.findOne({userId});
+  try {
+    const { userId, items, total } = req.body;
 
-    
+    // Log request body for debugging
+    console.log('body:', req.body);
+    console.log('total:', total);
+
+    // Create a new order
     const order = await ordersModel.create({
-      userId : userId,
-      items:items,
-      total:total
+      userId: userId,
+      items: items,
+      total: total,
+      cancel:false
     });
+
     await order.save();
-  
-    
+
+    // Clear the user's cart after successful order creation
+    await cartModel.deleteMany({ userId: userId });
+
+    // Send a success response
+    res.status(200).send({ message: 'Checkout successful and cart cleared.' });
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).send('Internal Server Error');
+  }
 };
+
 
 const handleremoveFromCart = async (req, res) => {
   try {
@@ -308,6 +339,41 @@ const handleremoveFromCart = async (req, res) => {
   }
 };
 
+const handleOrder = async (req, res) => {
+  try {
+    // Fetch all orders from the ordersModel
+    const orders = await ordersModel.find({});
+    res.send(orders); // Send the array of orders as the response
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const handleCancelOrder = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+    console.log('Order ID:', orderId);
+
+    // Find the order by ID and update the cancel field to true
+    const updatedOrder = await ordersModel.findByIdAndUpdate(
+      orderId, 
+      { cancel: true }, 
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.status(200).json({ message: 'Order successfully canceled', order: updatedOrder });
+  } catch (error) {
+    console.error('Error occurred while canceling order:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 
 export {
   handleLogin,
@@ -320,5 +386,7 @@ export {
   handleCart,
   handleCartUpdate,
   handleCheckout,
-  handleremoveFromCart
+  handleremoveFromCart,
+  handleOrder,
+  handleCancelOrder
 };

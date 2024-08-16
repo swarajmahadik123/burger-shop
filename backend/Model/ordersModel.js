@@ -44,6 +44,10 @@ const ordersSchema = new mongoose.Schema({
     total:{
         type:Number,
         required:true
+    },
+    cancel:{
+        type:Boolean,
+        required:true
     }
 })
 

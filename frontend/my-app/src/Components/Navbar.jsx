@@ -23,7 +23,7 @@ const Navbar = () => {
     try {
       const token = Cookies.get("_id");
       if (token) {
-        const response = await axios.get("http://localhost:8080/auth", {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/auth`, {
           withCredentials: true,
         });
         if (response.data.message === "Valid token") {
@@ -49,7 +49,7 @@ const Navbar = () => {
       <div className="flex items-center justify-between px-4">
         <div className={!isLoggedIn ? "w-[50%]" : ""}>
           <a aria-current="page" className="flex items-center" href="/">
-            <FaHamburger className="h-7 w-auto" alt="Logo" />
+           <FaHamburger className="h-7 w-auto text-yellow-500" alt="Logo" />
             <p className="sr-only">Website Title</p>
           </a>
         </div>

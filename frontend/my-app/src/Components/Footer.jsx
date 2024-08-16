@@ -26,7 +26,7 @@ const Footer = () => {
 
           {/* About Section */}
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
-            <a href="#" className="text-2xl font-bold mb-4 block">Feane</a>
+            <a href="#" className="text-2xl font-bold mb-4 block">BurgerBite</a>
             <p className="text-gray-400 mb-4">
               Necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with
             </p>

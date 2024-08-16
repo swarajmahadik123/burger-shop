@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handleAuth, handleLogin, handleProducts, handleRegister ,handleProductDetails ,handleProtectedRoute,handleAddToCart,handleCart,handleCartUpdate,handleCheckout,handleremoveFromCart} from "../controller/userController.js";
+import { handleAuth, handleLogin, handleProducts, handleRegister ,handleProductDetails ,handleProtectedRoute,handleAddToCart,handleCart,handleCartUpdate,handleCheckout,handleremoveFromCart,handleOrder,handleCancelOrder} from "../controller/userController.js";
 
 const userRouter=Router();
 
@@ -14,5 +14,7 @@ userRouter.route('/cart').post(handleCart);
 userRouter.route('/updatecart').post(handleCartUpdate);
 userRouter.route('/checkout').post(handleCheckout);
 userRouter.route('/removefromcart').post(handleremoveFromCart)
+userRouter.route('/handleorder').get(handleOrder)
+userRouter.route('/cancelorder').post(handleCancelOrder);
 
 export default userRouter;

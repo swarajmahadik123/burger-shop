@@ -28,7 +28,7 @@ const ProductDetail = () => {
         const userId = decodedToken.id;
         
 
-        const url = `http://localhost:8080/addtocart`;
+        const url = `${process.env.REACT_APP_URL}/addtocart`;
         const response = await axios.post(url,{
           productId : id,
           quantity : quantity,
@@ -41,7 +41,7 @@ const ProductDetail = () => {
     const handleProductDetails = async () => {
         try {
           
-          const url = `http://localhost:8080/productdetail/${id}`;
+          const url = `${process.env.REACT_APP_URL}/productdetail/${id}`;
           const response = await axios.get(url);
           const item = response?.data;
           setProduct(item); 

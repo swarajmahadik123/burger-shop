@@ -17,7 +17,7 @@ const Home = () => {
       <Slider foodSectionRef={foodSectionRef} /> {/* Pass ref to Slider */}
       {isLoggedIn && (
         <>
-          <Offer />
+          <Offer foodSectionRef={foodSectionRef} />
           <div ref={foodSectionRef}>
             <FoodSection />
           </div>

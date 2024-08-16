@@ -30,7 +30,7 @@ const Cart = () => {
     setTimeout(() => {
 
       if (updatedQuantity && updatedQuantity >= 2) {
-        const url = 'http://localhost:8080/updatecart';
+        const url =  `${process.env.REACT_APP_URL}}/updatecart`;
 
         axios.post(url, { productId, quantity: updatedQuantity, userId: userId });
       }
@@ -53,7 +53,7 @@ const Cart = () => {
     setTimeout(() => {
 
       if (updatedQuantity) {
-        const url = 'http://localhost:8080/updatecart';
+        const url = `${process.env.REACT_APP_URL}/updatecart`;
         axios.post(url, { productId, quantity: updatedQuantity, userId: userId });
       }
     }, 500);
@@ -65,7 +65,7 @@ const Cart = () => {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.id;
 
-      const url = `http://localhost:8080/cart`;
+      const url = `${process.env.REACT_APP_URL}/cart`;
 
       const response = await axios.post(url, { userId });
       setProductList(response?.data || []); // Handle empty response
@@ -84,14 +84,14 @@ const Cart = () => {
     // Display success message
     handleSuccess('order successful')
 
-    const url = 'http://localhost:8080/checkout';
+    const url = `${process.env.REACT_APP_URL}/checkout`;
     axios.post(url, { userId, items: prevProductList, total :total });
   };
 
   const handleDelete = async (productId) => {
     console.log('handle delete is called');
     try {
-      const url = 'http://localhost:8080/removefromcart'
+      const url = `${process.env.REACT_APP_URL}/removefromcart`
       const response = await axios.post(url, {
         userId: userId,
         productId: productId

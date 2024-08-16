@@ -32,7 +32,7 @@ const SignUp = () => {
             handleError('Password must be of 6 characters');
         } else {
             try {
-                const url = 'http://localhost:8080/signup';
+                const url = `${process.env.REACT_APP_URL}/signup`;
                 const response = await axios.post(url, signInInfo, {
                     headers: {
                         'Content-Type': 'application/json'

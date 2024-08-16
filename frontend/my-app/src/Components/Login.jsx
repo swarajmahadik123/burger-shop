@@ -23,34 +23,33 @@ const Login = () => {
         copyLoginInfo[name]=value;
         setLoginInfo(copyLoginInfo);
     }
-    const handleSubmit = async (e)=>{
-        e.preventDefault();
-        const{email,password}=loginInfo;
-        if(!email || !password){
-            handleError('all fields are required');
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const { email, password } = loginInfo;
+      if (!email || !password) {
+        handleError('All fields are required');
+        return;
+      }
+      try {
+        const url = `${process.env.REACT_APP_URL}/login`;// Ensure correct usage of environment variable
+        const response = await axios.post(url, loginInfo, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        localStorage.setItem("token", response?.data?.token);
+        Cookies.set("_id", response?.data?.token, { expires: 7 });
+        if (response.status === 200) {
+          setIsLoggedIn(true);
+          handleSuccess('User logged in successfully');
+          navigate('/');
         }
-        try {
-            const url ='http://localhost:8080/login';
-            const response = await axios.post(url,loginInfo,{
-                headers:{
-                    'Content-Type':'application/json'
-                }
-            });
-            localStorage.setItem("token", response?.data?.token);
-
-            Cookies.set("_id",response?.data?.token,{expires: 7});
-            if (response.status === 200) {
-                setIsLoggedIn(true);
-                handleSuccess('User  login successfully');
-                
-                navigate('/');
-
-            }
-        } catch (error) {
-            console.log(error);
-            handleError('Login failed');
-        }
-    }
+      } catch (error) {
+        console.error('Error details:', error.response || error.message); // More detailed error logging
+        handleError('Login failed');
+      }
+    };
+    
     return (
         <>
 

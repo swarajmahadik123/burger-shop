@@ -11,7 +11,7 @@ const ProtectedRoute = ({ element: Component }) => {
     const handleProtected = async () => {
         if (loginCookie) {
           try {
-            const response = await axios.post("http://localhost:8080/protectedroute", {
+            const response = await axios.post(`${process.env.REACT_APP_URL}/protectedroute`, {
                 _id: loginCookie
             }, {
                 headers: {

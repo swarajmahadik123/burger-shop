@@ -11,7 +11,7 @@ const About = () => {
           </div>
           <div className="md:w-1/2 md:pl-8">
             <div className="heading_container mb-4">
-              <h2 className="text-3xl font-bold text-gray-900">We Are Feane</h2>
+              <h2 className="text-3xl font-bold text-gray-900">We Are BurgerBite</h2>
             </div>
             <p className="text-gray-700 mb-6">
               There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
