@@ -26,10 +26,11 @@ const Navbar = () => {
 
   const handleAuth = async () => {
     try {
-      const token = Cookies.get("_id");
+      const token = localStorage.getItem('token');
       if (token) {
         const response = await axios.get(`${process.env.REACT_APP_URL}/auth`, {
           withCredentials: true,
+          token:token,
         });
         if (response.data.message === "Valid token") {
           setIsLoggedIn(true);
