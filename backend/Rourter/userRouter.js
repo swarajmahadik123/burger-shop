@@ -5,7 +5,7 @@ const userRouter=Router();
 
 userRouter.route('/signup').post(handleRegister);
 userRouter.route('/login').post(handleLogin);
-userRouter.route('/auth').get(handleAuth);
+userRouter.route('/auth').post(handleAuth);
 userRouter.route('/product').get(handleProducts);
 userRouter.route('/productdetail/:id').get(handleProductDetails)
 userRouter.route('/protectedroute').post(handleProtectedRoute);
