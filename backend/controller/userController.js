@@ -85,7 +85,7 @@ const handleLogin = async (req, res) => {
 
 const handleAuth = async (req, res) => {
   try {
-    const token = req.cookies._id;
+    const {token} = req.body;
 
     if (!token) {
       return res.status(400).json({ message: "No token provided" });
