@@ -8,7 +8,7 @@ import userRouter from './Rourter/userRouter.js';  // Import the router
 
 dotenv.config();
 
-const URL = "mongodb://localhost:27017/";
+const URL = "mongodb+srv://swarajm:123@cluster0.z818uzk.mongodb.net/test?retryWrites=true&w=majority";
 connectMongoDB(URL);
 
 const app = express();
