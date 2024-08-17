@@ -28,7 +28,7 @@ const Navbar = () => {
     try {
       const token = localStorage.getItem('token');
       if (token) {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/auth`, {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/auth`, {
           withCredentials: true,
           token:token,
         });
