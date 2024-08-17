@@ -14,7 +14,7 @@ userRouter.route('/cart').post(handleCart);
 userRouter.route('/updatecart').post(handleCartUpdate);
 userRouter.route('/checkout').post(handleCheckout);
 userRouter.route('/removefromcart').post(handleremoveFromCart)
-userRouter.route('/handleorder').get(handleOrder)
+userRouter.route('/handleorder').post(handleOrder)
 userRouter.route('/cancelorder').post(handleCancelOrder);
 
 export default userRouter;

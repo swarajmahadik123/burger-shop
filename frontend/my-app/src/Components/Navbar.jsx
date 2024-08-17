@@ -4,8 +4,10 @@ import Cookies from "js-cookie";
 import { FaHamburger, FaTimes } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -14,6 +16,9 @@ const Navbar = () => {
     try {
       Cookies.remove("_id");
       setIsLoggedIn(false);
+      localStorage.removeItem('token');
+      navigate('/login');
+
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -202,14 +207,14 @@ const Navbar = () => {
                   {/* Profile Icon */}
                   <img
                     className="w-10 h-10 rounded-full"
-                    src="https://via.placeholder.com/150" // Replace with actual user profile image
+                    src="https://api.multiavatar.com/:seed.svg " // Replace with actual user profile image
                     alt="Profile"
                   />
                 </button>
                 
 
                 {isProfileOpen && (
-                  <div className="flex flex-col justify-center absolute right-0 mt-2   md:w-[8vw] rounded-md shadow-lg  hover:bg-white  hover:bg-opacity- ring-1 ring-black ring-opacity-5">
+                  <div className="flex flex-col justify-center absolute right-0 mt-2   md:w-[8vw] rounded-md shadow-lg  hover:bg-opacity- ring-1 ring-black ring-opacity-5">
                     <div className="py-1">
                       <a
                         href="/profile"

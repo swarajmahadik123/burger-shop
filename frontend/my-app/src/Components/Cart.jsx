@@ -77,7 +77,7 @@ const Cart = () => {
   const handleCheckout = () => {
     // Clear the cart
     const prevProductList = productList;
-    console.log(total);
+    // console.log(total);
     setTotalPrice(total);
     setProductList([]);
 

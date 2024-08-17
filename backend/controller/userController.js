@@ -341,18 +341,40 @@ const handleremoveFromCart = async (req, res) => {
 
 const handleOrder = async (req, res) => {
   try {
-    // Fetch all orders from the ordersModel
-    const orders = await ordersModel.find({});
-    res.send(orders); // Send the array of orders as the response
+    const { userId } = req.body;
+    
+    // Ensure userId is provided
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    // Fetch all orders for the given userId
+    const orders = await ordersModel.find({ });
+    const filteredOrders = orders.filter(order => order.userId == userId);
+    
+    console.log('orders',orders);
+    console.log('filterorders ',filteredOrders);
+    // Check if orders were found
+    if (!filteredOrders.length) {
+      return res.status(404).json({ message: 'No orders found for this user' });
+    }
+
+    res.status(200).json(filteredOrders); // Send the array of orders as the response
   } catch (error) {
     console.error('Error occurred:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
 const handleCancelOrder = async (req, res) => {
   try {
     const { orderId } = req.body;
+    
+    // Ensure orderId is provided
+    if (!orderId) {
+      return res.status(400).json({ message: 'Order ID is required' });
+    }
+
     console.log('Order ID:', orderId);
 
     // Find the order by ID and update the cancel field to true
@@ -369,7 +391,7 @@ const handleCancelOrder = async (req, res) => {
     res.status(200).json({ message: 'Order successfully canceled', order: updatedOrder });
   } catch (error) {
     console.error('Error occurred while canceling order:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
